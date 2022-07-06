@@ -1,4 +1,17 @@
-import pandas as pd 
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+
+from sklearn.linear_model import LogisticRegression
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.svm import LinearSVC, SVC
+from sklearn.neural_network import MLPClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+
+import warnings
+warnings.filterwarnings(action='ignore')
 
 df60s = pd.read_csv("dataset-of-60s.csv")
 df70s = pd.read_csv("dataset-of-70s.csv")
@@ -45,15 +58,40 @@ print(df)
 
 print(df.info())
 
+
 #make a copy for editing and preprocessing
 def preprocess(df):
     dfCopy = df.copy()
 
     #we want to drop categorical values that have nothing to do with our analysis, track name, artist name, and uri (link from spotify api)
+    #there are too many elements in these columns we would have to set up too many dummy variables thus making a df with too many cols
     dfCopy = dfCopy.drop(["track", "artist", "uri"], axis = 1)
-    return dfCopy
 
-dfnew = preprocess(df)
+    #since we predict target (hit or not) we split it
 
-print(dfnew)
-    
+    y = dfCopy["target"]
+    x = dfCopy.drop("target", axis = 1)
+
+    #training and testing
+    #higher training % = more accuracy, common practice is to use 70/30
+    # due to size of our dataset (small) we will use 80/20
+    x_train,  x_test, y_train, y_test = train_test_split(x,y, train_size = 0.8, shuffle = True, random_state = 1)
+
+    #scale values to make them closer together
+
+    scale = StandardScaler()
+    scale.fit(x_train)
+    x_train = pd.DataFrame(scale.transform(x_train), index = x_train.index, columns = x_train.columns)
+    x_test = pd.DataFrame(scale.transform(x_test), index = x_test.index, columns = x_test.columns)
+
+    return x_train, x_test, y_train, y_test
+
+x_train, x_test, y_train, y_test = preprocess(df)
+
+print(x_train.var()) #var close to 1
+print(x_train.mean()) #mean close to 0
+
+#print(df.var()) variance is too high, must scale in preprocess
+
+#training data
+
