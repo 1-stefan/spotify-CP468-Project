@@ -95,3 +95,22 @@ print(x_train.mean()) #mean close to 0
 
 #training data
 
+mlModels = {
+    "                   Logistic Regression": LogisticRegression(),
+    "                   K-Nearest Neighbors": KNeighborsClassifier(),
+    "                         Decision Tree": DecisionTreeClassifier(),
+    "Support Vector Machine (Linear Kernel)": LinearSVC(),
+    "   Support Vector Machine (RBF Kernel)": SVC(),
+    "                        Neural Network": MLPClassifier()
+}
+
+
+#training individual models
+for name, model in mlModels.items():
+    model.fit(x_train, y_train)
+    print(name + " trained.")
+
+#results
+
+for name, model in mlModels.items():
+    print(name + ": {:.2f}%".format(model.score(x_test, y_test) * 100))
