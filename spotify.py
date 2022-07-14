@@ -1,5 +1,8 @@
 import pandas as pd
 import numpy as np
+from numpy import random
+import math
+from sklearn import metrics
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
@@ -106,11 +109,74 @@ mlModels = {
 
 
 #training individual models
-for name, model in mlModels.items():
-    model.fit(x_train, y_train)
-    print(name + " trained.")
+#for name, model in mlModels.items():
+    #model.fit(x_train, y_train)
+    #print(name + " trained.")
 
-#results
+#results of accuracy
 
-for name, model in mlModels.items():
-    print(name + ": {:.2f}%".format(model.score(x_test, y_test) * 100))
+#for name, model in mlModels.items():
+    #print(name + ": {:.2f}%".format(model.score(x_test, y_test) * 100))
+
+
+#after determining the score, we can see that SVM for RBF kernel and Neural Network are the most precise algs
+#therefore, we will procede using those
+
+svcModel = SVC()
+NNmodel = MLPClassifier()
+
+svcModel.fit(x_train, y_train)
+#NNmodel.fit(x_train, y_train)
+
+y1_pred = svcModel.predict(x_test)
+#y2_pred = NNmodel.predict(x_test)
+
+#calculate mse of predictions vs actual
+
+mseSVC = round(metrics.mean_squared_error(y_test, y1_pred), 3)
+#mseNN = round(metrics.mean_squared_error(y_test, y2_pred), 3)
+
+print(mseSVC)
+#y_test.to_numpy()
+#print(calculate_error(y1_pred,y_test))
+
+#method for generating songs for prediction
+
+def make_song(danceability = x_train["danceability"].mean(),
+                energy = x_train["energy"].mean(),
+                key = x_train["key"].mean(),
+                loudness = x_train["loudness"].mean(),
+                mode = x_train["mode"].mean(),
+                speechiness = x_train["speechiness"].mean(),
+                acousticness = x_train["acousticness"].mean(),
+                instrumentalness = x_train["instrumentalness"].mean(),
+                liveness = x_train["liveness"].mean(),
+                valence = x_train["valence"].mean(),
+                tempo = x_train["tempo"].mean(),
+                duration_ms = x_train["duration_ms"].mean(),
+                time_signature = x_train["time_signature"].mean(),
+                chorus_hit = x_train["chorus_hit"].mean(),
+                sections = x_train["sections"].mean()):
+                decade = 2010
+                return pd.DataFrame({   "danceability": danceability,
+                                        "energy": energy,
+                                        "key": key,
+                                        "loudness": loudness,
+                                        "mode": mode,
+                                        "speechiness": speechiness,
+                                        "acousticness": acousticness,
+                                        "instrumentalness": instrumentalness,
+                                        "liveness": liveness,
+                                        "valence": valence,
+                                        "tempo": tempo,
+                                        "duration_ms": duration_ms,
+                                        "time_signature": time_signature,
+                                        "chorus_hit": chorus_hit,
+                                        "sections": sections,
+                                        "decade": decade
+                }, index = [0])
+
+print(svcModel.predict(make_song(acousticness= 1, valence = 1, liveness = 1)))
+
+#now lets look at some important features of the dataset to inquire what to predict
+
