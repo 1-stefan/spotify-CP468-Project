@@ -179,4 +179,3 @@ def make_song(danceability = x_train["danceability"].mean(),
 print(svcModel.predict(make_song(acousticness= 1, valence = 1, liveness = 1)))
 
 #now lets look at some important features of the dataset to inquire what to predict
-
