@@ -12,6 +12,10 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.svm import LinearSVC, SVC
 from sklearn.neural_network import MLPClassifier
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
+import seaborn as sns
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+mpl.rcParams['figure.figsize'] = (20,5)
 
 import warnings
 warnings.filterwarnings(action='ignore')
@@ -126,19 +130,32 @@ svcModel = SVC()
 NNmodel = MLPClassifier()
 
 svcModel.fit(x_train, y_train)
-#NNmodel.fit(x_train, y_train)
+NNmodel.fit(x_train, y_train)
 
 y1_pred = svcModel.predict(x_test)
-#y2_pred = NNmodel.predict(x_test)
+y2_pred = NNmodel.predict(x_test)
 
-#calculate mse of predictions vs actual
+#calculate a confusion matrix
 
-mseSVC = round(metrics.mean_squared_error(y_test, y1_pred), 3)
-#mseNN = round(metrics.mean_squared_error(y_test, y2_pred), 3)
+cnf_matrix = metrics.confusion_matrix(y_test, y1_pred)
+cnf2_matrix = metrics.confusion_matrix(y_test, y2_pred)
 
-print(mseSVC)
-#y_test.to_numpy()
-#print(calculate_error(y1_pred,y_test))
+#creating the map
+mpl.rcParams['figure.figsize']=(10,5)
+class_names=[0,1] # name  of classes
+fig, ax = plt.subplots()
+tick_marks = np.arange(len(class_names))
+plt.xticks(tick_marks, class_names)
+plt.yticks(tick_marks, class_names)
+# create heatmap
+sns.heatmap(pd.DataFrame(cnf_matrix), annot=True, cmap="RdPu" ,fmt='g')
+ax.xaxis.set_label_position("top")
+plt.tight_layout()
+plt.title('Confusion matrix', y=1.1)
+plt.ylabel('Actual label')
+plt.xlabel('Predicted label')
+plt.show()
+
 
 #method for generating songs for prediction
 
@@ -179,3 +196,4 @@ def make_song(danceability = x_train["danceability"].mean(),
 print(svcModel.predict(make_song(acousticness= 1, valence = 1, liveness = 1)))
 
 #now lets look at some important features of the dataset to inquire what to predict
+
