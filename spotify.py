@@ -193,7 +193,24 @@ def make_song(danceability = x_train["danceability"].mean(),
                                         "decade": decade
                 }, index = [0])
 
-print(svcModel.predict(make_song(acousticness= 1, valence = 1, liveness = 1)))
+#the average song is a flop "0"
+print(svcModel.predict(make_song()))
 
 #now lets look at some important features of the dataset to inquire what to predict
+df = pd.DataFrame(x_train)
+
+#here we will test multiple samples of the df ie. different songs and see which ones are hits and if they fit in our ranges
+pd.set_option('display.max_columns', None)
+for i in range(0,10):
+    sample = df.sample()
+    
+    print(sample)
+    print(svcModel.predict(sample))
+
+for i in range(0,10):
+    sample = df.sample()
+    print(sample)
+    print(NNmodel.predict(sample))
+
+
 
