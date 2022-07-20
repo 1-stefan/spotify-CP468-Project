@@ -1,3 +1,10 @@
+# Author
+- Duc Minh Nguyen
+- Stefan Bukarica 
+
+# Instructor 
+- Dr. Sukhjit Singh Sehra
+
 # spotify-CP468-Project
 - CP468 Project Analyzing Spotify API Data
 - The objective of this project is to learn and see how spotify's data perform and how we use it to predict future songs if they'll become a hit or not
